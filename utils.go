@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // SayHello prints a greeting
@@ -84,4 +85,15 @@ func ReadAllFilesWithExtension(extension string, dirPath ...string) ([]string, e
 		return nil, err
 	}
 	return filesWithExtension, nil
+}
+
+// DisplayMessageInBox exibe uma mensagem em uma caixa estilizada com arte ASCII
+func DisplayMessageInBox(message string) {
+	borderTopBottom := "╔" + strings.Repeat("═", len(message)+2) + "╗"
+	borderSides := "║ " + message + " ║"
+	borderBottom := "╚" + strings.Repeat("═", len(message)+2) + "╝"
+
+	fmt.Println(borderTopBottom)
+	fmt.Println(borderSides)
+	fmt.Println(borderBottom)
 }
