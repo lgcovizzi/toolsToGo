@@ -14,6 +14,7 @@ go get github.com/lgcovizzi/toolsToGo@latest
 ## To update to the latest version:
 
 ```sh
+go clean -modcache
 go get -u github.com/lgcovizzi/toolsToGo
 ```
 
