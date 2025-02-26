@@ -6,19 +6,20 @@ import (
 	"path/filepath"
 )
 
-// SayHello imprime uma saudação
+// SayHello prints a greeting
 func SayHello(name string) {
-	fmt.Printf("Olá, %s!\n", name)
+	fmt.Printf("Hello, %s!\n", name)
 }
 
+// GetProjectRoot returns the root directory of the project
 func GetProjectRoot() (string, error) {
-	// Obtém o diretório atual
+	// Get the current directory
 	dir, err := os.Getwd()
 	if err != nil {
 		return "", err
 	}
 
-	// Navega até a raiz do projeto
+	// Navigate to the project root
 	for {
 		if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil {
 			return dir, nil
@@ -29,10 +30,10 @@ func GetProjectRoot() (string, error) {
 		}
 		dir = parentDir
 	}
-	return "", fmt.Errorf("raiz do projeto não encontrada")
+	return "", fmt.Errorf("project root not found")
 }
 
-// ReadFile lê o conteúdo de um arquivo. O nome do arquivo é obrigatório e o diretório é opcional.
+// ReadFile reads the content of a file. The file name is required and the directory is optional.
 func ReadFile(fileName string, dirPath ...string) (string, error) {
 	var filePath string
 
@@ -54,8 +55,8 @@ func ReadFile(fileName string, dirPath ...string) (string, error) {
 	return string(content), nil
 }
 
-// ReadAllFilesWithExtension retorna uma lista de arquivos com a extensão especificada. O diretório é opcional.
-func ReadAllFilesWithExtension(extensao string, dirPath ...string) ([]string, error) {
+// ReadAllFilesWithExtension returns a list of files with the specified extension. The directory is optional.
+func ReadAllFilesWithExtension(extension string, dirPath ...string) ([]string, error) {
 	var path string
 
 	if len(dirPath) > 0 {
@@ -68,13 +69,13 @@ func ReadAllFilesWithExtension(extensao string, dirPath ...string) ([]string, er
 		}
 	}
 
-	var arquivosComExtensao []string
+	var filesWithExtension []string
 	err := filepath.Walk(path, func(filePath string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		if !info.IsDir() && filepath.Ext(filePath) == extensao {
-			arquivosComExtensao = append(arquivosComExtensao, filePath)
+		if !info.IsDir() && filepath.Ext(filePath) == extension {
+			filesWithExtension = append(filesWithExtension, filePath)
 		}
 		return nil
 	})
@@ -82,5 +83,5 @@ func ReadAllFilesWithExtension(extensao string, dirPath ...string) ([]string, er
 	if err != nil {
 		return nil, err
 	}
-	return arquivosComExtensao, nil
+	return filesWithExtension, nil
 }
