@@ -31,3 +31,21 @@ func GetProjectRoot() (string, error) {
 	}
 	return "", fmt.Errorf("raiz do projeto não encontrada")
 }
+
+// ReadFile lê o conteúdo de um arquivo. Se o caminho não for fornecido, usa a raiz do projeto.
+func ReadFile(filePath string) (string, error) {
+	if filePath == "" {
+		var err error
+		filePath, err = GetProjectRoot()
+		if err != nil {
+			return "", err
+		}
+		filePath = filepath.Join(filePath, "default.txt") // Exemplo de arquivo padrão
+	}
+
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
+}
