@@ -89,11 +89,36 @@ func ListAllFilesWithExtension(extension string, dirPath ...string) ([]string, e
 
 // DisplayMessageInBox exibe uma mensagem em uma caixa estilizada com arte ASCII
 func DisplayMessageInBox(message string) {
-	borderTopBottom := "╔" + strings.Repeat("═", len(message)+2) + "╗"
-	borderSides := "║ " + message + " ║"
-	borderBottom := "╚" + strings.Repeat("═", len(message)+2) + "╝"
+	// Define a largura máxima da linha
+	maxLineWidth := 40 // Você pode ajustar esse valor conforme necessário
 
+	// Quebra a mensagem em múltiplas linhas
+	words := strings.Fields(message)
+	var lines []string
+	var currentLine string
+
+	for _, word := range words {
+		if len(currentLine)+len(word)+1 > maxLineWidth {
+			lines = append(lines, currentLine)
+			currentLine = word
+		} else {
+			if currentLine != "" {
+				currentLine += " "
+			}
+			currentLine += word
+		}
+	}
+	lines = append(lines, currentLine) // Adiciona a última linha
+
+	// Imprime a caixa
+	borderTopBottom := "╔" + strings.Repeat("═", maxLineWidth+2) + "╗"
 	fmt.Println(borderTopBottom)
-	fmt.Println(borderSides)
+
+	for _, line := range lines {
+		borderSides := "║ " + line + strings.Repeat(" ", maxLineWidth-len(line)) + " ║"
+		fmt.Println(borderSides)
+	}
+
+	borderBottom := "╚" + strings.Repeat("═", maxLineWidth+2) + "╝"
 	fmt.Println(borderBottom)
 }
