@@ -56,8 +56,8 @@ func ReadFile(fileName string, dirPath ...string) (string, error) {
 	return string(content), nil
 }
 
-// ReadAllFilesWithExtension returns a list of files with the specified extension. The directory is optional.
-func ReadAllFilesWithExtension(extension string, dirPath ...string) ([]string, error) {
+// ListAllFilesWithExtension searches for all files with the specified extension. The directory is optional.
+func ListAllFilesWithExtension(extension string, dirPath ...string) ([]string, error) {
 	var path string
 
 	if len(dirPath) > 0 {
