@@ -32,15 +32,19 @@ func GetProjectRoot() (string, error) {
 	return "", fmt.Errorf("raiz do projeto não encontrada")
 }
 
-// ReadFile lê o conteúdo de um arquivo. Se o caminho não for fornecido, usa a raiz do projeto.
-func ReadFile(filePath string) (string, error) {
-	if filePath == "" {
+// ReadFile lê o conteúdo de um arquivo. O nome do arquivo é obrigatório e o diretório é opcional.
+func ReadFile(fileName string, dirPath ...string) (string, error) {
+	var filePath string
+
+	if len(dirPath) > 0 {
+		filePath = filepath.Join(dirPath[0], fileName)
+	} else {
 		var err error
-		filePath, err = GetProjectRoot()
+		dirPath[0], err = GetProjectRoot()
 		if err != nil {
 			return "", err
 		}
-		filePath = filepath.Join(filePath, "default.txt") // Exemplo de arquivo padrão
+		filePath = filepath.Join(dirPath[0], fileName)
 	}
 
 	content, err := os.ReadFile(filePath)
@@ -48,4 +52,35 @@ func ReadFile(filePath string) (string, error) {
 		return "", err
 	}
 	return string(content), nil
+}
+
+// ReadAllFilesWithExtension retorna uma lista de arquivos com a extensão especificada. O diretório é opcional.
+func ReadAllFilesWithExtension(extensao string, dirPath ...string) ([]string, error) {
+	var path string
+
+	if len(dirPath) > 0 {
+		path = dirPath[0]
+	} else {
+		var err error
+		path, err = GetProjectRoot()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	var arquivosComExtensao []string
+	err := filepath.Walk(path, func(filePath string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() && filepath.Ext(filePath) == extensao {
+			arquivosComExtensao = append(arquivosComExtensao, filePath)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return arquivosComExtensao, nil
 }
